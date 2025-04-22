@@ -1,0 +1,27 @@
+#!/bin/bash
+
+set -e
+
+# Update system
+sudo dnf update -y
+
+# Install Java 17 (recommended for Amazon Linux 2023)
+sudo dnf install -y java-17-amazon-corretto
+
+# Add Jenkins repo
+sudo curl --silent --location https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.repo -o /etc/yum.repos.d/jenkins.repo
+sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+
+# Install Jenkins
+sudo dnf install -y jenkins
+
+# Enable and start Jenkins
+sudo systemctl enable jenkins
+sudo systemctl start jenkins
+
+# Print Jenkins status
+sudo systemctl status jenkins
+
+# Print initial admin password
+echo "Jenkins Initial Admin Password:"
+sudo cat /var/lib/jenkins/secrets/initialAdminPassword
