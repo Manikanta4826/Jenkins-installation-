@@ -1,0 +1,31 @@
+#!/bin/bash
+
+set -e
+
+# Update system packages
+sudo dnf update -y
+
+# Install Java 17 (required for Jenkins)
+sudo dnf install -y java-17-amazon-corretto
+
+# Add Jenkins repository and import GPG key
+sudo curl -o /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+
+# Adjust repo to use EL9 (Amazon Linux 2023 is based on RHEL 9)
+sudo sed -i 's/\$releasever/9/g' /etc/yum.repos.d/jenkins.repo
+
+# Install Jenkins
+sudo dnf install -y jenkins
+
+# Enable and start Jenkins service
+sudo systemctl enable jenkins
+sudo systemctl start jenkins
+
+# Print Jenkins status
+echo "Jenkins service status:"
+sudo systemctl status jenkins
+
+# Display initial admin password
+echo "Jenkins Initial Admin Password:"
+sudo cat /var/lib/jenkins/secrets/initialAdminPassword
